@@ -26,7 +26,7 @@ const POPULAR_DESTINATIONS = [
     city: 'Kyoto',
     country: 'Japan',
     image:
-      'https://images.unsplash.com/photo-1545569310-87b9b6f0e3a4?auto=format&fit=crop&w=800&q=70',
+      'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=70',
   },
   {
     city: 'Santorini',

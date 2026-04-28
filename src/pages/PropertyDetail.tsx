@@ -189,16 +189,6 @@ export default function PropertyDetail() {
             </div>
           )}
 
-          {/* Location placeholder */}
-          <div className="border-b border-ink-line py-6">
-            <h2 className="mb-2 text-lg font-semibold">Where you'll be</h2>
-            <p className="text-sm text-ink-muted">{property.address}</p>
-            <div className="mt-4 flex h-64 items-center justify-center rounded-2xl bg-primary-subtle text-sm text-ink-muted">
-              <MapPin className="mr-2 h-5 w-5 text-primary" />
-              Map preview coming soon
-            </div>
-          </div>
-
           {/* Reviews */}
           <div className="py-6">
             <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">

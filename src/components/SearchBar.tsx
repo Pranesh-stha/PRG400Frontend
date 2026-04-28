@@ -9,6 +9,8 @@ interface Props {
   variant?: 'hero' | 'compact';
   initial?: {
     city?: string;
+    country?: string;
+    location?: string;
     check_in?: string;
     check_out?: string;
     guests?: number;
@@ -17,7 +19,9 @@ interface Props {
 
 export default function SearchBar({ variant = 'hero', initial }: Props) {
   const navigate = useNavigate();
-  const [city, setCity] = useState(initial?.city ?? '');
+  const [location, setLocation] = useState(
+    initial?.location ?? initial?.city ?? initial?.country ?? ''
+  );
   const [checkIn, setCheckIn] = useState(initial?.check_in ?? '');
   const [checkOut, setCheckOut] = useState(initial?.check_out ?? '');
   const [guests, setGuests] = useState<number>(initial?.guests ?? 1);
@@ -25,7 +29,7 @@ export default function SearchBar({ variant = 'hero', initial }: Props) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (city.trim()) params.set('city', city.trim());
+    if (location.trim()) params.set('location', location.trim());
     if (checkIn) params.set('check_in', checkIn);
     if (checkOut) params.set('check_out', checkOut);
     if (guests > 1) params.set('guests', String(guests));
@@ -51,9 +55,9 @@ export default function SearchBar({ variant = 'hero', initial }: Props) {
         <Field icon={<MapPin className="h-4 w-4 text-ink-muted" />}>
           <input
             type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="Where are you going?"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="City or country"
             className="h-full w-full bg-transparent text-sm text-ink placeholder:text-ink-subtle focus:outline-none"
           />
         </Field>

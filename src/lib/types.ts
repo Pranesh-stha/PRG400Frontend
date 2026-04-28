@@ -87,6 +87,7 @@ export interface PropertyDetail {
 export interface PropertyFilters {
   city?: string;
   country?: string;
+  location?: string;
   property_type?: string;
   min_price?: number;
   max_price?: number;

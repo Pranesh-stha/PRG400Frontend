@@ -28,6 +28,8 @@ function parseFilters(sp: URLSearchParams): PropertyFilters {
   if (city) f.city = city;
   const country = sp.get('country');
   if (country) f.country = country;
+  const location = sp.get('location');
+  if (location) f.location = location;
   const property_type = sp.get('property_type');
   if (property_type) f.property_type = property_type;
   const min_price = sp.get('min_price');
@@ -120,7 +122,13 @@ export default function SearchPage() {
             <div className="mb-4 flex items-end justify-between">
               <div>
                 <h1 className="text-xl font-semibold text-ink sm:text-2xl">
-                  {filters.city ? `Stays in ${filters.city}` : 'All stays'}
+                  {filters.location
+                    ? `Stays in ${filters.location}`
+                    : filters.city
+                      ? `Stays in ${filters.city}`
+                      : filters.country
+                        ? `Stays in ${filters.country}`
+                        : 'All stays'}
                 </h1>
                 <p className="mt-1 text-sm text-ink-muted">
                   {isLoading
