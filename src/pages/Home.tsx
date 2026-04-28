@@ -104,8 +104,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured */}
+      {/* Popular destinations */}
       <section className="container-page mb-16">
+        <h2 className="mb-6 text-xl font-semibold text-ink sm:text-2xl">
+          Popular destinations
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {POPULAR_DESTINATIONS.map((d) => (
+            <Link
+              key={d.city}
+              to={`/search?city=${encodeURIComponent(d.city)}`}
+              className="group relative aspect-[4/5] overflow-hidden rounded-2xl"
+            >
+              <img
+                src={d.image}
+                alt={d.city}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-ink/0" />
+              <div className="absolute bottom-4 left-4 text-white">
+                <p className="text-lg font-semibold">{d.city}</p>
+                <p className="text-xs opacity-90">{d.country}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured */}
+      <section className="container-page mb-20">
         <div className="mb-6 flex items-end justify-between">
           <div>
             <h2 className="text-xl font-semibold text-ink sm:text-2xl">
@@ -134,34 +162,6 @@ export default function Home() {
         ) : (
           <EmptyHint />
         )}
-      </section>
-
-      {/* Popular destinations */}
-      <section className="container-page mb-20">
-        <h2 className="mb-6 text-xl font-semibold text-ink sm:text-2xl">
-          Popular destinations
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {POPULAR_DESTINATIONS.map((d) => (
-            <Link
-              key={d.city}
-              to={`/search?city=${encodeURIComponent(d.city)}`}
-              className="group relative aspect-[4/5] overflow-hidden rounded-2xl"
-            >
-              <img
-                src={d.image}
-                alt={d.city}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-ink/0" />
-              <div className="absolute bottom-4 left-4 text-white">
-                <p className="text-lg font-semibold">{d.city}</p>
-                <p className="text-xs opacity-90">{d.country}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
       </section>
     </>
   );

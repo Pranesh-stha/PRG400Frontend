@@ -27,7 +27,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-line bg-white/95 backdrop-blur shadow-header">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
+      <div className="container-page relative flex h-16 items-center justify-between gap-4">
         <Link
           to="/"
           className="flex items-center gap-2 text-lg font-semibold text-ink"
@@ -36,7 +36,7 @@ export default function Header() {
           <span className="tracking-tight">Stay</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
           {navLinks.map((l) => (
             <NavLink
               key={l.to}

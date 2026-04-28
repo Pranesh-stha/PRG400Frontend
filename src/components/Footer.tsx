@@ -33,9 +33,9 @@ export default function Footer() {
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-ink-line pt-6 text-xs text-ink-muted md:flex-row md:items-center">
           <span>© {new Date().getFullYear()} Stay. A student project.</span>
           <div className="flex gap-4">
-            <span className="hover:text-ink cursor-default">Privacy</span>
-            <span className="hover:text-ink cursor-default">Terms</span>
-            <span className="hover:text-ink cursor-default">Sitemap</span>
+            <span className="hover:text-ink cursor-pointer">Privacy</span>
+            <span className="hover:text-ink cursor-pointer">Terms</span>
+            <span className="hover:text-ink cursor-pointer">Sitemap</span>
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@ function FooterCol({ title, items }: { title: string; items: string[] }) {
       <h4 className="mb-3 text-sm font-semibold text-ink">{title}</h4>
       <ul className="space-y-2 text-sm text-ink-muted">
         {items.map((it) => (
-          <li key={it} className="hover:text-ink cursor-default transition-colors">
+          <li key={it} className="hover:text-ink cursor-pointer transition-colors">
             {it}
           </li>
         ))}
