@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import type { ReactNode } from 'react';
 
 import {
@@ -22,6 +29,11 @@ interface AuthState {
     phone?: string;
   }) => Promise<void>;
   logout: () => void;
+  // Modal control
+  authModalOpen: boolean;
+  authModalMode: 'login' | 'register';
+  openAuthModal: (mode?: 'login' | 'register') => void;
+  closeAuthModal: () => void;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -29,6 +41,8 @@ const AuthContext = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
 
   useEffect(() => {
     const token = getStoredToken();
@@ -67,6 +81,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const openAuthModal = useCallback((mode: 'login' | 'register' = 'login') => {
+    setAuthModalMode(mode);
+    setAuthModalOpen(true);
+  }, []);
+
+  const closeAuthModal = useCallback(() => setAuthModalOpen(false), []);
+
   const value = useMemo<AuthState>(
     () => ({
       user,
@@ -75,8 +96,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       register,
       logout,
+      authModalOpen,
+      authModalMode,
+      openAuthModal,
+      closeAuthModal,
     }),
-    [user, loading, login, register, logout]
+    [
+      user,
+      loading,
+      login,
+      register,
+      logout,
+      authModalOpen,
+      authModalMode,
+      openAuthModal,
+      closeAuthModal,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -96,7 +96,7 @@ export async function listPropertyReviews(propertyId: string): Promise<Review[]>
   return data;
 }
 
-// ---------- Bookings (used in Phase 7+) ----------
+// ---------- Bookings ----------
 export async function createBooking(payload: {
   property_id: string;
   check_in: string;
@@ -109,5 +109,81 @@ export async function createBooking(payload: {
 
 export async function myBookings(): Promise<Booking[]> {
   const { data } = await api.get<Booking[]>('/bookings/me');
+  return data;
+}
+
+export async function hostBookings(): Promise<Booking[]> {
+  const { data } = await api.get<Booking[]>('/bookings/host');
+  return data;
+}
+
+export async function cancelBooking(bookingId: string): Promise<Booking> {
+  const { data } = await api.patch<Booking>(`/bookings/${bookingId}/cancel`);
+  return data;
+}
+
+// ---------- Host: properties ----------
+export interface PropertyImageInput {
+  url: string;
+  display_order?: number;
+  is_primary?: boolean;
+}
+
+export interface PropertyInput {
+  title: string;
+  description: string;
+  property_type: string;
+  address: string;
+  city: string;
+  country: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  price_per_night: number;
+  max_guests: number;
+  bedrooms: number;
+  bathrooms: number;
+  amenities: string[];
+  images?: PropertyImageInput[];
+}
+
+export async function listMyProperties(): Promise<import('./types').PropertySummary[]> {
+  const { data } = await api.get<import('./types').PropertySummary[]>(
+    '/properties/host/me'
+  );
+  return data;
+}
+
+export async function createProperty(payload: PropertyInput): Promise<PropertyDetail> {
+  const { data } = await api.post<PropertyDetail>('/properties', payload);
+  return data;
+}
+
+export async function updateProperty(
+  id: string,
+  payload: Partial<PropertyInput> & { is_active?: boolean }
+): Promise<PropertyDetail> {
+  const { data } = await api.put<PropertyDetail>(`/properties/${id}`, payload);
+  return data;
+}
+
+export async function deleteProperty(id: string): Promise<void> {
+  await api.delete(`/properties/${id}`);
+}
+
+export async function addPropertyImages(
+  id: string,
+  images: PropertyImageInput[]
+): Promise<unknown> {
+  const { data } = await api.post(`/properties/${id}/images`, images);
+  return data;
+}
+
+// ---------- Reviews ----------
+export async function createReview(payload: {
+  booking_id: string;
+  rating: number;
+  comment?: string;
+}): Promise<Review> {
+  const { data } = await api.post<Review>('/reviews', payload);
   return data;
 }

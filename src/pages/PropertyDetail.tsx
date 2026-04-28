@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
   BedDouble,
   Bath,
   Calendar,
+  Loader2,
   MapPin,
   Share2,
   Users,
@@ -15,7 +16,7 @@ import { toast } from 'sonner';
 
 import StarRating from '@/components/StarRating';
 import { Button } from '@/components/ui/Button';
-import { getProperty, listPropertyReviews } from '@/lib/api';
+import { createBooking, getProperty, listPropertyReviews } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import {
   cn,
@@ -285,8 +286,10 @@ interface BookingProps {
   propertyId: string;
 }
 
-function BookingWidget({ pricePerNight, maxGuests }: BookingProps) {
-  const { isAuthenticated } = useAuth();
+function BookingWidget({ pricePerNight, maxGuests, propertyId }: BookingProps) {
+  const { isAuthenticated, openAuthModal } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const today = useMemo(() => toIsoDate(new Date()), []);
   const tomorrow = useMemo(() => {
     const d = new Date();
@@ -305,16 +308,37 @@ function BookingWidget({ pricePerNight, maxGuests }: BookingProps) {
   const fees = subtotal * 0.08;
   const total = subtotal + fees;
 
+  const bookingMutation = useMutation({
+    mutationFn: () =>
+      createBooking({
+        property_id: propertyId,
+        check_in: checkIn,
+        check_out: checkOut,
+        num_guests: guests,
+      }),
+    onSuccess: () => {
+      toast.success('Booking confirmed! See it in My Bookings.');
+      queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+      navigate('/bookings');
+    },
+    onError: (err: unknown) => {
+      const detail =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail ?? 'Could not complete booking. Please try again.';
+      toast.error(detail);
+    },
+  });
+
   const handleBook = () => {
     if (!isAuthenticated) {
-      toast.info('Please sign in to complete your booking. (Auth flow lands next phase.)');
+      openAuthModal('login');
       return;
     }
     if (nights <= 0) {
       toast.error('Choose valid dates first.');
       return;
     }
-    toast.info('Booking submission coming next phase.');
+    bookingMutation.mutate();
   };
 
   return (
@@ -368,7 +392,15 @@ function BookingWidget({ pricePerNight, maxGuests }: BookingProps) {
         </div>
       </div>
 
-      <Button size="lg" className="mt-4 w-full" onClick={handleBook}>
+      <Button
+        size="lg"
+        className="mt-4 w-full"
+        onClick={handleBook}
+        disabled={bookingMutation.isPending}
+      >
+        {bookingMutation.isPending && (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        )}
         {isAuthenticated ? 'Reserve' : 'Sign in to book'}
       </Button>
 

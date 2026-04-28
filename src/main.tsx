@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 
 import App from './App';
+import AuthModal from './components/AuthModal';
 import { AuthProvider } from './lib/auth';
 import './index.css';
 
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <AuthProvider>
           <App />
+          <AuthModal />
           <Toaster position="top-center" richColors />
         </AuthProvider>
       </BrowserRouter>
