@@ -12,9 +12,9 @@ export default function Header() {
   const [accountOpen, setAccountOpen] = useState(false);
   const navigate = useNavigate();
 
-  const navLinks = [
+  const navLinks: { to: string; label: string; end: boolean; icon?: typeof SearchIcon }[] = [
     { to: '/', label: 'Stays', end: true },
-    { to: '/search', label: 'Explore', end: false },
+    { to: '/search', label: 'Explore', end: false, icon: SearchIcon },
   ];
 
   const handleHostClick = () => {
@@ -36,34 +36,30 @@ export default function Header() {
           <span className="tracking-tight">Stay</span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
-          {navLinks.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              end={l.end}
-              className={({ isActive }) =>
-                cn(
-                  'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'text-ink bg-ink/[0.04]'
-                    : 'text-ink-muted hover:text-ink hover:bg-ink/[0.03]'
-                )
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
-        </nav>
-
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/search')}
-            className="hidden h-10 w-10 items-center justify-center rounded-full text-ink-muted hover:bg-ink/[0.04] hover:text-ink md:inline-flex"
-            aria-label="Search"
-          >
-            <SearchIcon className="h-4 w-4" />
-          </button>
+          <nav className="hidden items-center gap-1 md:flex">
+            {navLinks.map((l) => {
+              const Icon = l.icon;
+              return (
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  end={l.end}
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      isActive
+                        ? 'text-ink bg-ink/[0.04]'
+                        : 'text-ink-muted hover:text-ink hover:bg-ink/[0.03]'
+                    )
+                  }
+                >
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {l.label}
+                </NavLink>
+              );
+            })}
+          </nav>
 
           <button
             onClick={handleHostClick}
